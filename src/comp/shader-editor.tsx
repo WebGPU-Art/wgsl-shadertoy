@@ -88,6 +88,7 @@ const cssButton = css`
 const cssHeader = css`
   padding: 6px;
   justify-content: flex-end;
+  gap: 6px;
 `;
 
 const cssLink = css`

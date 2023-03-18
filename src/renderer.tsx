@@ -299,14 +299,7 @@ export default class Renderer {
     // 🖌️ Encode drawing commands
     this.passEncoder = this.commandEncoder.beginRenderPass(renderPassDesc);
     this.passEncoder.setPipeline(this.pipeline);
-    this.passEncoder.setViewport(
-      0,
-      0,
-      window.innerWidth,
-      window.innerHeight,
-      0,
-      1
-    );
+    this.passEncoder.setViewport(0, 0, getWidth(), getHeight(), 0, 1);
     this.passEncoder.setScissorRect(0, 0, getWidth(), getHeight());
     this.passEncoder.setVertexBuffer(0, this.positionBuffer);
     this.passEncoder.setVertexBuffer(1, this.colorBuffer);

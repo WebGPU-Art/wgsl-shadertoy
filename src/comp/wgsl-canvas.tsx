@@ -3,6 +3,8 @@ import { useDebouncedCallback } from "use-debounce";
 
 import Renderer from "../renderer";
 
+let pixelRatio = window.devicePixelRatio || 1.0;
+
 function WgslCanvas(props: {
   vertWgsl: string;
   onError: (err: string) => void;
@@ -13,19 +15,15 @@ function WgslCanvas(props: {
     console.info("rerender");
 
     const canvas = canvasRef.current as HTMLCanvasElement;
-    canvas.width = window.innerWidth * (devicePixelRatio || 1.0);
-    canvas.height = window.innerHeight * (devicePixelRatio || 1.0);
+    canvas.style.width = `${window.innerWidth}px`;
+    canvas.style.height = `${window.innerHeight}px`;
+    canvas.width = window.innerWidth * pixelRatio;
+    canvas.height = window.innerHeight * pixelRatio;
     const renderer = new Renderer(canvas);
     renderer.start(
       props.vertWgsl
-        .replace(
-          "{%inner_width%}",
-          (window.innerWidth * (devicePixelRatio || 1.0)).toString()
-        )
-        .replace(
-          "{%inner_height%}",
-          (window.innerHeight * (devicePixelRatio || 1.0)).toString()
-        )
+        .replace("{%inner_width%}", window.innerWidth.toString())
+        .replace("{%inner_height%}", window.innerHeight.toString())
     );
   };
 

@@ -58,7 +58,7 @@ fn vertex_main(
 
 @fragment
 fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
-  // provide (x,y) in pixels, center is (0,0). well, not accurate since pixel ratio.
+  // provide (x,y) in pixels, center is (0,0)
   let pos = vs_out.pos;
   let x = pos.x * inner_width * 0.5;
   let y = pos.y * inner_height * 0.5;
