@@ -1,3 +1,5 @@
+import render from "bottom-tip";
+
 // 🔎 Check out the blog post:
 // https://alain.xyz/blog/raw-webgpu
 
@@ -22,6 +24,11 @@ const colors = new Float32Array([
 
 // 📇 Index Buffer Data
 const indices = new Uint16Array([0, 1, 2]);
+
+let sharedDevice = null;
+
+let getWidth = () => window.innerWidth * (devicePixelRatio || 1.0);
+let getHeight = () => window.innerHeight * (devicePixelRatio || 1.0);
 
 export default class Renderer {
   canvas: HTMLCanvasElement;
@@ -70,6 +77,13 @@ export default class Renderer {
 
   // 🌟 Initialize WebGPU
   async initializeAPI(): Promise<boolean> {
+    if (sharedDevice) {
+      this.device = sharedDevice.device;
+      this.adapter = sharedDevice.adapter;
+      this.queue = sharedDevice.queue;
+      return true;
+    }
+
     try {
       // 🏭 Entry to WebGPU
       const entry: GPU = navigator.gpu;
@@ -85,6 +99,12 @@ export default class Renderer {
 
       // 📦 Queue
       this.queue = this.device.queue;
+
+      sharedDevice = {
+        device: this.device,
+        adapter: this.adapter,
+        queue: this.queue,
+      };
     } catch (e) {
       console.error(e);
       return false;
@@ -127,6 +147,20 @@ export default class Renderer {
       code: code,
     };
     this.fragModule = this.device.createShaderModule(fsmDesc);
+
+    this.vertModule.getCompilationInfo().then((info) => {
+      if (info.messages.length > 0) {
+        displayError(info.messages[0].message, code, info);
+      } else {
+        this.fragModule.getCompilationInfo().then((info) => {
+          if (info.messages.length > 0) {
+            displayError(info.messages[0].message, code, info);
+          } else {
+            displayError(null, code, info);
+          }
+        });
+      }
+    });
 
     // ⚗️ Graphics Pipeline
 
@@ -216,7 +250,7 @@ export default class Renderer {
     }
 
     const depthTextureDesc: GPUTextureDescriptor = {
-      size: [this.canvas.width, this.canvas.height, 1],
+      size: [getWidth(), getHeight(), 1],
       dimension: "2d",
       format: "depth24plus-stencil8",
       usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
@@ -258,17 +292,12 @@ export default class Renderer {
     this.passEncoder.setViewport(
       0,
       0,
-      this.canvas.width,
-      this.canvas.height,
+      window.innerWidth,
+      window.innerHeight,
       0,
       1
     );
-    this.passEncoder.setScissorRect(
-      0,
-      0,
-      this.canvas.width,
-      this.canvas.height
-    );
+    this.passEncoder.setScissorRect(0, 0, getWidth(), getHeight());
     this.passEncoder.setVertexBuffer(0, this.positionBuffer);
     this.passEncoder.setVertexBuffer(1, this.colorBuffer);
     this.passEncoder.setIndexBuffer(this.indexBuffer, "uint16");
@@ -290,3 +319,18 @@ export default class Renderer {
     requestAnimationFrame(this.render);
   };
 }
+
+let displayError = (
+  message: string | null,
+  code: string,
+  info: GPUCompilationInfo
+) => {
+  if (message == null) {
+    render("ok~");
+  } else {
+    console.error(info);
+    let before = code.split("\n").slice(0, info.messages[0].lineNum).join("\n");
+    let space = " ".repeat(info.messages[0].linePos - 1);
+    render("error", before + "\n" + space + "^ " + message);
+  }
+};

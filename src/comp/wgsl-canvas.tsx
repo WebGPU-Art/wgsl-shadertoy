@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 import Renderer from "../renderer";
 
@@ -12,20 +13,22 @@ function WgslCanvas(props: {
     console.log("rerender");
 
     const canvas = canvasRef.current as HTMLCanvasElement;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth * (devicePixelRatio || 1.0);
+    canvas.height = window.innerHeight * (devicePixelRatio || 1.0);
     const renderer = new Renderer(canvas);
     renderer.start(props.vertWgsl);
   };
 
+  let debouncedRender = useDebouncedCallback(render, 200);
+
   useEffect(() => {
-    render();
+    debouncedRender();
   }, [props.vertWgsl]);
 
   useEffect(() => {
-    window.addEventListener("resize", render);
+    window.addEventListener("resize", debouncedRender);
     return () => {
-      window.removeEventListener("resize", render);
+      window.removeEventListener("resize", debouncedRender);
     };
   }, []);
 

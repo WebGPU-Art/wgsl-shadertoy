@@ -11,15 +11,24 @@ function ShaderEditor(props: {
 
   return (
     <div className={cx(cssEditor, column)}>
-      <div className={rowParted}>
+      <div className={cx(rowParted, cssHeader)}>
         <button
+          className={cssButton}
           onClick={() => {
             props.onChange(localCode);
           }}
         >
-          send
+          Submit (Command+s)
         </button>
-        <div>TODO</div>
+        <div>
+          <a
+            href="https://github.com/Triadica/wgsl-shadertoy"
+            target="_blank"
+            className={cssLink}
+          >
+            GitHub
+          </a>
+        </div>
       </div>
       <CodeEditor
         value={localCode}
@@ -27,6 +36,17 @@ function ShaderEditor(props: {
         placeholder="Please enter JS code."
         onChange={(evn) => {
           setLocalCode(evn.target.value);
+        }}
+        onKeyDown={(event) => {
+          if (event.key == "Enter" && (event.ctrlKey || event.metaKey)) {
+            props.onChange(localCode);
+            event.preventDefault();
+          }
+
+          if (event.key == "s" && (event.ctrlKey || event.metaKey)) {
+            props.onChange(localCode);
+            event.preventDefault();
+          }
         }}
         padding={15}
         style={{
@@ -58,4 +78,17 @@ const cssEditor = css`
   &:hover {
     opacity: 0.9;
   }
+`;
+
+const cssButton = css`
+  display: inline-block;
+`;
+
+const cssHeader = css`
+  margin-bottom: 4px;
+`;
+
+const cssLink = css`
+  color: #aaf;
+  font-family: Helvetica Neue, Serif;
 `;
