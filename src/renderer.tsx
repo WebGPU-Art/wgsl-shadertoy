@@ -6,7 +6,8 @@ import render from "bottom-tip";
 // 🌅 Renderer
 // 📈 Position Vertex Buffer Data
 const positions = new Float32Array([
-  1.0, -1.0, 0.0, -1.0, -1.0, 0.0, 0.0, 1.0, 0.0,
+  1.0, -1.0, 0.0, -1.0, -1.0, 0.0, -1.0, 1.0, 0.0, 1.0, -1.0, 0.0, 1.0, 1.0,
+  0.0, -1.0, 1.0, 0.0,
 ]);
 
 // 🎨 Color Vertex Buffer Data
@@ -20,10 +21,19 @@ const colors = new Float32Array([
   0.0,
   0.0,
   1.0, // 🔵
+  1.0,
+  0.0,
+  0.0, // 🔴
+  0.0,
+  1.0,
+  0.0, // 🟢
+  0.0,
+  0.0,
+  1.0, // 🔵
 ]);
 
 // 📇 Index Buffer Data
-const indices = new Uint16Array([0, 1, 2]);
+const indices = new Uint16Array([0, 1, 2, 3, 4, 5]);
 
 let sharedDevice = null;
 
@@ -301,7 +311,7 @@ export default class Renderer {
     this.passEncoder.setVertexBuffer(0, this.positionBuffer);
     this.passEncoder.setVertexBuffer(1, this.colorBuffer);
     this.passEncoder.setIndexBuffer(this.indexBuffer, "uint16");
-    this.passEncoder.drawIndexed(3, 1);
+    this.passEncoder.drawIndexed(6, 1);
     this.passEncoder.end();
 
     this.queue.submit([this.commandEncoder.finish()]);
@@ -326,7 +336,7 @@ let displayError = (
   info: GPUCompilationInfo
 ) => {
   if (message == null) {
-    render("ok~");
+    render("ok~", "Ok");
   } else {
     console.error(info);
     let before = code.split("\n").slice(0, info.messages[0].lineNum).join("\n");

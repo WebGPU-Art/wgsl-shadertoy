@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 import { css, cx } from "@emotion/css";
-import { rowParted, expand, column } from "@worktools/flex-styles";
+import { rowParted, expand, column, rowMiddle } from "@worktools/flex-styles";
 
 function ShaderEditor(props: {
   code: string;
@@ -11,7 +11,7 @@ function ShaderEditor(props: {
 
   return (
     <div className={cx(cssEditor, column)}>
-      <div className={cx(rowParted, cssHeader)}>
+      <div className={cx(rowMiddle, cssHeader)}>
         <button
           className={cssButton}
           onClick={() => {
@@ -67,9 +67,9 @@ const cssEditor = css`
   opacity: 0.3;
   transition-duration: 200ms;
   position: absolute;
-  top: 8px;
-  right: 8px;
-  bottom: 8px;
+  top: 0px;
+  right: -20vw;
+  bottom: 0px;
   width: 40vw;
   border-radius: 8px;
   box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.3);
@@ -77,6 +77,7 @@ const cssEditor = css`
 
   &:hover {
     opacity: 0.9;
+    right: 0px;
   }
 `;
 
@@ -85,10 +86,15 @@ const cssButton = css`
 `;
 
 const cssHeader = css`
-  margin-bottom: 4px;
+  padding: 6px;
+  justify-content: flex-end;
 `;
 
 const cssLink = css`
   color: #aaf;
   font-family: Helvetica Neue, Serif;
+  background-color: white;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
 `;

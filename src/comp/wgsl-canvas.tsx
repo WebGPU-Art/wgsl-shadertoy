@@ -10,13 +10,23 @@ function WgslCanvas(props: {
   let canvasRef = useRef<HTMLCanvasElement>(null);
 
   let render = () => {
-    console.log("rerender");
+    console.info("rerender");
 
     const canvas = canvasRef.current as HTMLCanvasElement;
     canvas.width = window.innerWidth * (devicePixelRatio || 1.0);
     canvas.height = window.innerHeight * (devicePixelRatio || 1.0);
     const renderer = new Renderer(canvas);
-    renderer.start(props.vertWgsl);
+    renderer.start(
+      props.vertWgsl
+        .replace(
+          "{%inner_width%}",
+          (window.innerWidth * (devicePixelRatio || 1.0)).toString()
+        )
+        .replace(
+          "{%inner_height%}",
+          (window.innerHeight * (devicePixelRatio || 1.0)).toString()
+        )
+    );
   };
 
   let debouncedRender = useDebouncedCallback(render, 200);
