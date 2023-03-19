@@ -12,7 +12,7 @@
     "@emotion/css": "^11.10.6",
     "@uiw/react-textarea-code-editor": "^2.1.1",
     "@worktools/flex-styles": "^0.2.3",
-    "bottom-tip": "^0.1.4",
+    "bottom-tip": "^0.1.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "use-debounce": "^9.0.3"
@@ -22,7 +22,7 @@
     "@types/react-dom": "^18.0.11",
     "@vitejs/plugin-react": "^3.1.0",
     "@webgpu/types": "^0.1.30",
-    "typescript": "^4.9.3",
+    "typescript": "^5.0.2",
     "vite": "^4.2.0"
   }
 }

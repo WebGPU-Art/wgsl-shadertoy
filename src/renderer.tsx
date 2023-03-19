@@ -319,7 +319,7 @@ export default class Renderer {
     this.encodeCommands();
 
     // ➿ Refresh canvas
-    requestAnimationFrame(this.render);
+    // requestAnimationFrame(this.render);
   };
 }
 
