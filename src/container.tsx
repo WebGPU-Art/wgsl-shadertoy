@@ -62,10 +62,13 @@ fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
   let pos = vs_out.pos;
   let x = pos.x * inner_width * 0.5;
   let y = pos.y * inner_height * 0.5;
+  let angle = atan2(y, x);
 
   // draw a circle
   let l = length(vec2<f32>(x, y));
-  if (l < 204 && l > 200) {
+  if (l < 220 * sin(16 * angle)
+      && l > 180 * sin(16 * angle)
+      && l > 200 * sin(8 * angle + 0.08)) {
     return vec4(1.0, 1.0, 0.0, 1.0);
   }
 
