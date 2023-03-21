@@ -1,10 +1,13 @@
+import render from "bottom-tip";
+
 // 🔎 Check out the blog post:
 // https://alain.xyz/blog/raw-webgpu
 
 // 🌅 Renderer
 // 📈 Position Vertex Buffer Data
 const positions = new Float32Array([
-  1.0, -1.0, 0.0, -1.0, -1.0, 0.0, 0.0, 1.0, 0.0,
+  1.0, -1.0, 0.0, -1.0, -1.0, 0.0, -1.0, 1.0, 0.0, 1.0, -1.0, 0.0, 1.0, 1.0,
+  0.0, -1.0, 1.0, 0.0,
 ]);
 
 // 🎨 Color Vertex Buffer Data
@@ -18,10 +21,24 @@ const colors = new Float32Array([
   0.0,
   0.0,
   1.0, // 🔵
+  1.0,
+  1.0,
+  0.0, // 🔴
+  0.0,
+  1.0,
+  0.0, // 🟢
+  0.0,
+  0.0,
+  1.0, // 🔵
 ]);
 
 // 📇 Index Buffer Data
-const indices = new Uint16Array([0, 1, 2]);
+const indices = new Uint16Array([0, 1, 2, 3, 4, 5]);
+
+let sharedDevice = null;
+
+let getWidth = () => window.innerWidth * (devicePixelRatio || 1.0);
+let getHeight = () => window.innerHeight * (devicePixelRatio || 1.0);
 
 export default class Renderer {
   canvas: HTMLCanvasElement;
@@ -70,6 +87,13 @@ export default class Renderer {
 
   // 🌟 Initialize WebGPU
   async initializeAPI(): Promise<boolean> {
+    if (sharedDevice) {
+      this.device = sharedDevice.device;
+      this.adapter = sharedDevice.adapter;
+      this.queue = sharedDevice.queue;
+      return true;
+    }
+
     try {
       // 🏭 Entry to WebGPU
       const entry: GPU = navigator.gpu;
@@ -85,6 +109,12 @@ export default class Renderer {
 
       // 📦 Queue
       this.queue = this.device.queue;
+
+      sharedDevice = {
+        device: this.device,
+        adapter: this.adapter,
+        queue: this.queue,
+      };
     } catch (e) {
       console.error(e);
       return false;
@@ -127,6 +157,20 @@ export default class Renderer {
       code: code,
     };
     this.fragModule = this.device.createShaderModule(fsmDesc);
+
+    this.vertModule.getCompilationInfo().then((info) => {
+      if (info.messages.length > 0) {
+        displayError(info.messages[0].message, code, info);
+      } else {
+        this.fragModule.getCompilationInfo().then((info) => {
+          if (info.messages.length > 0) {
+            displayError(info.messages[0].message, code, info);
+          } else {
+            displayError(null, code, info);
+          }
+        });
+      }
+    });
 
     // ⚗️ Graphics Pipeline
 
@@ -216,7 +260,7 @@ export default class Renderer {
     }
 
     const depthTextureDesc: GPUTextureDescriptor = {
-      size: [this.canvas.width, this.canvas.height, 1],
+      size: [getWidth(), getHeight(), 1],
       dimension: "2d",
       format: "depth24plus-stencil8",
       usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
@@ -255,24 +299,12 @@ export default class Renderer {
     // 🖌️ Encode drawing commands
     this.passEncoder = this.commandEncoder.beginRenderPass(renderPassDesc);
     this.passEncoder.setPipeline(this.pipeline);
-    this.passEncoder.setViewport(
-      0,
-      0,
-      this.canvas.width,
-      this.canvas.height,
-      0,
-      1
-    );
-    this.passEncoder.setScissorRect(
-      0,
-      0,
-      this.canvas.width,
-      this.canvas.height
-    );
+    this.passEncoder.setViewport(0, 0, getWidth(), getHeight(), 0, 1);
+    this.passEncoder.setScissorRect(0, 0, getWidth(), getHeight());
     this.passEncoder.setVertexBuffer(0, this.positionBuffer);
     this.passEncoder.setVertexBuffer(1, this.colorBuffer);
     this.passEncoder.setIndexBuffer(this.indexBuffer, "uint16");
-    this.passEncoder.drawIndexed(3, 1);
+    this.passEncoder.drawIndexed(6, 1);
     this.passEncoder.end();
 
     this.queue.submit([this.commandEncoder.finish()]);
@@ -287,6 +319,21 @@ export default class Renderer {
     this.encodeCommands();
 
     // ➿ Refresh canvas
-    requestAnimationFrame(this.render);
+    // requestAnimationFrame(this.render);
   };
 }
+
+let displayError = (
+  message: string | null,
+  code: string,
+  info: GPUCompilationInfo
+) => {
+  if (message == null) {
+    render("ok~", "Ok");
+  } else {
+    console.error(info);
+    let before = code.split("\n").slice(0, info.messages[0].lineNum).join("\n");
+    let space = " ".repeat(info.messages[0].linePos - 1);
+    render("error", before + "\n" + space + "^ " + message);
+  }
+};
