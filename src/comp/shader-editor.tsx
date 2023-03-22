@@ -28,13 +28,24 @@ function ShaderEditor(props: {
         />
       ) : null}
       <div className={cx(column, cssEditor)}>
-        <div
-          onClick={() => {
-            setVisible(!visible);
-          }}
-          className={cssTitle}
-        >
-          {title} ▾
+        <div className={cx(rowParted, cssBar)}>
+          <div
+            onClick={() => {
+              setVisible(!visible);
+            }}
+            className={cssTitle}
+          >
+            {title} ▾
+          </div>
+          <span
+            className={cssOpacity}
+            onClick={() => {
+              // call fullscreen
+              document.body.requestFullscreen();
+            }}
+          >
+            ⚁
+          </span>
         </div>
         <div className={cssEditorWrapper}>
           <CodeEditor
@@ -154,4 +165,13 @@ const cssTitle = css`
   &:hover {
     background-color: #f8f8f8;
   }
+`;
+
+const cssBar = css`
+  padding-left: 4px;
+  padding-right: 12px;
+`;
+
+const cssOpacity = css`
+  cursor: pointer;
 `;

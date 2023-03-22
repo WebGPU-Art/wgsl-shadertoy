@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import WgslCanvas from "./comp/wgsl-canvas";
 import ShaderEditor from "./comp/shader-editor";
 
@@ -6,6 +6,21 @@ import baseWgsl from "../shaders/base.wgsl";
 
 function Container() {
   const [code, setCode] = useState(baseWgsl);
+  const [_, forceRerender] = useState(0);
+
+  const fullHeight = window.innerHeight === screen.availHeight;
+
+  useEffect(() => {
+    let handler = () => {
+      forceRerender(Math.random());
+    };
+    window.addEventListener("resize", handler);
+    return () => {
+      window.removeEventListener("resize", handler);
+    };
+  }, []);
+
+  console.log("full height", fullHeight);
 
   return (
     <div>
@@ -15,12 +30,14 @@ function Container() {
           console.error(error);
         }}
       />
-      <ShaderEditor
-        code={code}
-        onChange={(text) => {
-          setCode(text);
-        }}
-      />
+      {fullHeight ? null : (
+        <ShaderEditor
+          code={code}
+          onChange={(text) => {
+            setCode(text);
+          }}
+        />
+      )}
     </div>
   );
 }
