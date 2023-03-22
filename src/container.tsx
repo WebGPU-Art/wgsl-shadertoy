@@ -20,8 +20,6 @@ function Container() {
     };
   }, []);
 
-  console.log("full height", fullHeight);
-
   return (
     <div>
       <WgslCanvas

@@ -3,19 +3,15 @@ import { column } from "@worktools/flex-styles";
 
 import baseWgsl from "../../shaders/base.wgsl";
 import baseFlowerWgsl from "../../shaders/base-flower.wgsl";
+import baseRepeatWgsl from "../../shaders/base-repeat.wgsl";
 
 const floatTabs: {
   title: string;
   code: string;
 }[] = [
-  {
-    title: "Base",
-    code: baseWgsl,
-  },
-  {
-    title: "Base Flower",
-    code: baseFlowerWgsl,
-  },
+  { title: "Base", code: baseWgsl },
+  { title: "Base Flower", code: baseFlowerWgsl },
+  { title: "Repeat", code: baseRepeatWgsl },
 ];
 
 export function FloatTabs({
