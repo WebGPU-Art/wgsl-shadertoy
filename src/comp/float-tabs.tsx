@@ -4,6 +4,7 @@ import { column } from "@worktools/flex-styles";
 import baseWgsl from "../../shaders/base.wgsl";
 import baseFlowerWgsl from "../../shaders/base-flower.wgsl";
 import baseRepeatWgsl from "../../shaders/base-repeat.wgsl";
+import spiralWgsl from "../../shaders/spiral.wgsl";
 
 const floatTabs: {
   title: string;
@@ -12,6 +13,7 @@ const floatTabs: {
   { title: "Base", code: baseWgsl },
   { title: "Base Flower", code: baseFlowerWgsl },
   { title: "Repeat", code: baseRepeatWgsl },
+  { title: "Spiral", code: spiralWgsl },
 ];
 
 export function FloatTabs({
