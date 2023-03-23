@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import WgslCanvas from "./comp/wgsl-canvas";
 import ShaderEditor from "./comp/shader-editor";
 
-import baseWgsl from "../shaders/base.wgsl";
+import baseWgsl from "../shaders/base.wgsl?raw";
 
 function Container() {
   const [code, setCode] = useState(baseWgsl);

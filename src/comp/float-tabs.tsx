@@ -1,10 +1,10 @@
 import { css, cx } from "@emotion/css";
 import { column } from "@worktools/flex-styles";
 
-import baseWgsl from "../../shaders/base.wgsl";
-import baseFlowerWgsl from "../../shaders/base-flower.wgsl";
-import baseRepeatWgsl from "../../shaders/base-repeat.wgsl";
-import spiralWgsl from "../../shaders/spiral.wgsl";
+import baseWgsl from "../../shaders/base.wgsl?raw";
+import baseFlowerWgsl from "../../shaders/base-flower.wgsl?raw";
+import baseRepeatWgsl from "../../shaders/base-repeat.wgsl?raw";
+import spiralWgsl from "../../shaders/spiral.wgsl?raw";
 
 const floatTabs: {
   title: string;

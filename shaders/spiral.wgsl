@@ -27,14 +27,19 @@ fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
 }
 
 struct VertexOut {
-
+  // default position
   @builtin(position) position: vec4<f32>,
-
+  // position from -1 to 1
   @location(1) pos: vec3<f32>,
-
+  // defined vertex color
   @location(0) color: vec3<f32>,
 };
 
+/**
+ * (-1, 1,0) (1, 1,0)
+ *
+ * (-1,-1,0) (1,-1,0)
+ */
 @vertex
 fn vertex_main(
     @location(0) in_pos: vec3<f32>,
