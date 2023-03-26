@@ -6,6 +6,7 @@ import baseFlowerWgsl from "../../shaders/base-flower.wgsl?raw";
 import baseRepeatWgsl from "../../shaders/base-repeat.wgsl?raw";
 import spiralWgsl from "../../shaders/spiral.wgsl?raw";
 import juliaWgsl from "../../shaders/julia.wgsl?raw";
+import latticeWgsl from "../../shaders/lattice.wgsl?raw";
 
 const floatTabs: {
   title: string;
@@ -16,6 +17,7 @@ const floatTabs: {
   { title: "Repeat", code: baseRepeatWgsl },
   { title: "Spiral", code: spiralWgsl },
   { title: "Julia", code: juliaWgsl },
+  { title: "Lattice", code: latticeWgsl },
 ];
 
 export function FloatTabs({
