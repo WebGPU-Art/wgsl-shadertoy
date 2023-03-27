@@ -3,33 +3,40 @@ const inner_height: f32 = {%inner_height%};
 
 @fragment
 fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
-
+  // provide (x,y) in pixels, center is (0,0)
   let pos = vs_out.pos;
-  let x = pos.x * inner_width * 0.5;
-  let y = pos.y * inner_height * 0.5;
+  let x0 = pos.x * inner_width * 0.5;
+  let y0 = pos.y * inner_height * 0.5;
 
-  let grid = 100.0;
+  let x = x0 * 0.0015;
+  let y = y0 * 0.0015;
 
-  let x_s = balanced_fract(x / grid) * grid;
-  let y_s = balanced_fract(y / grid) * grid;
 
-  let angle = atan2(y_s, x_s);
+  var p = vec2(x, y);
+  let shift = vec2(-1.28, 0.0);
+  // let shift = vec2(-0.8, 0.15745);
 
-  let l = length(vec2<f32>(x_s, y_s));
-  if (l < 10 * (1 + sin(4 * angle + x * 0.2)) * (1 + cos(9 * angle + y * 0.1))) {
+  for (var i = 0u; i < 100; i++) {
+    p = product(p, p);
+    p = add(p, shift);
+
+  }
+
+  // draw a circle
+  let l = length(p);
+  if (l < 100) {
     return vec4(1.0, 1.0, 0.0, 1.0);
   }
 
   return vec4(vs_out.color, 1.0);
 }
 
-fn balanced_fract(x: f32) -> f32 {
-  let f = fract(x);
-  if (f > 0.5) {
-    return f - 1;
-  } else {
-    return f;
-  }
+fn product(a: vec2<f32>, b: vec2<f32>) -> vec2<f32> {
+  return vec2(a.x * b.x - a.y * b.y, a.x * b.y + a.y * b.x);
+}
+
+fn add(a: vec2<f32>, b: vec2<f32>) -> vec2<f32> {
+  return vec2(a.x + b.x, a.y + b.y);
 }
 
 struct VertexOut {

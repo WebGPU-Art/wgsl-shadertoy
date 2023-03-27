@@ -55,12 +55,12 @@ function ShaderEditor(props: {
             onChange={(evn) => {
               setLocalCode(evn.target.value);
             }}
-            onKeyDown={(event) => {
-              if (event.key == "Enter" && (event.ctrlKey || event.metaKey)) {
-                props.onChange(localCode);
-                event.preventDefault();
+            onClick={() => {
+              if (visible) {
+                setVisible(false);
               }
-
+            }}
+            onKeyDown={(event) => {
               if (event.key == "s" && (event.ctrlKey || event.metaKey)) {
                 props.onChange(localCode);
                 event.preventDefault();

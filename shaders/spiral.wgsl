@@ -1,35 +1,29 @@
 const inner_width: f32 = {%inner_width%};
 const inner_height: f32 = {%inner_height%};
 
+const PI = 3.14159265358979323846264338327;
+
 @fragment
 fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
 
   let pos = vs_out.pos;
   let x = pos.x * inner_width * 0.5;
   let y = pos.y * inner_height * 0.5;
+  let angle = atan2(y, x);
 
-  let grid = 100.0;
+  let step = 200.0;
 
-  let x_s = balanced_fract(x / grid) * grid;
-  let y_s = balanced_fract(y / grid) * grid;
+  let l = length(vec2<f32>(x, y));
+  let d = l + angle * 0.5 / PI * step;
+  var offset = fract(d / step);
 
-  let angle = atan2(y_s, x_s);
-
-  let l = length(vec2<f32>(x_s, y_s));
-  if (l < 10 * (1 + sin(4 * angle + x * 0.2)) * (1 + cos(9 * angle + y * 0.1))) {
-    return vec4(1.0, 1.0, 0.0, 1.0);
+  if (offset > 0.5) {
+    offset -= 1;
   }
 
-  return vec4(vs_out.color, 1.0);
-}
-
-fn balanced_fract(x: f32) -> f32 {
-  let f = fract(x);
-  if (f > 0.5) {
-    return f - 1;
-  } else {
-    return f;
-  }
+  let ff = pow(abs(offset), 0.3);
+  let shadow = min(1.0, 1 / ff * 0.1);
+  return vec4(shadow, shadow, shadow, 1.0);
 }
 
 struct VertexOut {
