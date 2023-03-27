@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 import Renderer from "../renderer";
@@ -10,6 +10,10 @@ function WgslCanvas(props: {
   onError: (err: string) => void;
 }) {
   let canvasRef = useRef<HTMLCanvasElement>(null);
+  let [clickPosition, setClickPos] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  });
 
   let render = () => {
     console.info("rerender");
@@ -24,14 +28,18 @@ function WgslCanvas(props: {
       props.vertWgsl
         .replace("{%inner_width%}", window.innerWidth.toString())
         .replace("{%inner_height%}", window.innerHeight.toString())
+        .replace(
+          "{%click_position%}",
+          `vec2(${clickPosition.x},${clickPosition.y})`
+        )
     );
   };
 
-  let debouncedRender = useDebouncedCallback(render, 200);
+  let debouncedRender = useDebouncedCallback(render, 100);
 
   useEffect(() => {
     debouncedRender();
-  }, [props.vertWgsl]);
+  }, [props.vertWgsl, clickPosition]);
 
   useEffect(() => {
     window.addEventListener("resize", debouncedRender);
@@ -40,7 +48,23 @@ function WgslCanvas(props: {
     };
   }, []);
 
-  return <canvas id="canvas" ref={canvasRef} />;
+  return (
+    <canvas
+      id="canvas"
+      ref={canvasRef}
+      onClick={(event) => {
+        let w = window.innerWidth;
+        let h = window.innerHeight;
+        let center = { x: w / 2, y: h / 2 };
+        let x = event.clientX;
+        let y = event.clientY;
+        let dx = x - center.x;
+        let dy = center.y - y;
+        console.log("click event", { x, y, w, h });
+        setClickPos({ x: dx, y: dy });
+      }}
+    />
+  );
 }
 
 export default WgslCanvas;
