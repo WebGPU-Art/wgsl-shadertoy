@@ -1,5 +1,5 @@
-const inner_width: f32 = {%inner_width%};
-const inner_height: f32 = {%inner_height%};
+// const inner_width: f32 = {%inner_width%};
+// const inner_height: f32 = {%inner_height%};
 
 @fragment
 fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
@@ -26,7 +26,7 @@ fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
 fn balanced_fract(x: f32) -> f32 {
   let f = fract(x);
   if f > 0.5 {
-    return f - 1;
+    return f - 1.;
   } else {
     return f;
   }

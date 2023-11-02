@@ -18,11 +18,11 @@ fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
   var offset = fract(d / step);
 
   if offset > 0.5 {
-    offset -= 1;
+    offset -= 1.;
   }
 
   let ff = pow(abs(offset), 0.3);
-  let shadow = min(1.0, 1 / ff * 0.1);
+  let shadow = min(1.0, 1. / ff * 0.1);
   return vec4(shadow, shadow, shadow, 1.0);
 }
 
@@ -35,11 +35,11 @@ struct VertexOut {
   @location(0) color: vec3<f32>,
 };
 
-/**
- * (-1, 1,0) (1, 1,0)
- *
- * (-1,-1,0) (1,-1,0)
- */
+///
+/// (-1, 1,0) (1, 1,0)
+///
+/// (-1,-1,0) (1,-1,0)
+///
 @vertex
 fn vertex_main(
   @location(0) in_pos: vec3<f32>,

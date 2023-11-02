@@ -17,8 +17,8 @@ fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
 
   // draw a circle
   let l = length(vec2<f32>(dx, dy));
-  let d = fract(angle / PI * 2);
-  if l < 40 * (1 - pow(0.25 - pow(0.5 - d, 2), 0.2)) {
+  let d = fract(angle / PI * 2.);
+  if l < 40. * (1. - pow(0.25 - pow(0.5 - d, 2.), 0.2)) {
     return vec4(1.0, 1.0, 0.0, 1.0);
   }
 
@@ -34,11 +34,11 @@ struct VertexOut {
   @location(0) color: vec3<f32>,
 };
 
-/**
- * (-1, 1,0) (1, 1,0)
- *
- * (-1,-1,0) (1,-1,0)
- */
+///
+/// (-1, 1,0) (1, 1,0)
+///
+/// (-1,-1,0) (1,-1,0)
+///
 @vertex
 fn vertex_main(
   @location(0) in_pos: vec3<f32>,
