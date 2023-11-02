@@ -11,9 +11,7 @@ fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
 
   // draw a flower
   let l = length(vec2<f32>(x, y));
-  if (l < 220 * sin(16 * angle)
-      && l > 180 * sin(16 * angle)
-      && l > 200 * sin(8 * angle + 0.08)) {
+  if l < 220 * sin(16 * angle) && l > 180 * sin(16 * angle) && l > 200 * sin(8 * angle + 0.08) {
     return vec4(1.0, 1.0, 0.0, 1.0);
   }
 
@@ -36,9 +34,9 @@ struct VertexOut {
  */
 @vertex
 fn vertex_main(
-    @location(0) in_pos: vec3<f32>,
-    @location(1) in_color: vec3<f32>
-  ) -> VertexOut {
+  @location(0) in_pos: vec3<f32>,
+  @location(1) in_color: vec3<f32>
+) -> VertexOut {
   var ret: VertexOut;
   ret.position = vec4<f32>(in_pos, 1.0);
   ret.color = in_color;

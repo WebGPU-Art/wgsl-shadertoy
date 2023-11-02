@@ -11,14 +11,14 @@ fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
   let x = pos.x * inner_width * 0.5;
   let y = pos.y * inner_height * 0.5;
 
-  let dx = x-click_position.x;
-  let dy = y-click_position.y;
+  let dx = x - click_position.x;
+  let dy = y - click_position.y;
   let angle = atan2(dy, dx);
 
   // draw a circle
   let l = length(vec2<f32>(dx, dy));
   let d = fract(angle / PI * 2);
-  if (l < 40 * (1 - pow(0.25 - pow(0.5-d, 2), 0.2))) {
+  if l < 40 * (1 - pow(0.25 - pow(0.5 - d, 2), 0.2)) {
     return vec4(1.0, 1.0, 0.0, 1.0);
   }
 
@@ -41,9 +41,9 @@ struct VertexOut {
  */
 @vertex
 fn vertex_main(
-    @location(0) in_pos: vec3<f32>,
-    @location(1) in_color: vec3<f32>
-  ) -> VertexOut {
+  @location(0) in_pos: vec3<f32>,
+  @location(1) in_color: vec3<f32>
+) -> VertexOut {
   var ret: VertexOut;
   ret.position = vec4<f32>(in_pos, 1.0);
   ret.color = in_color;

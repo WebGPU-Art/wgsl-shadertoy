@@ -10,7 +10,7 @@ fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
   let angle = atan2(y, x);
 
   let l = length(vec2(x, y));
-  if (l < 8) {
+  if l < 8 {
     return vec4(0.8, 0.8, 1.0, 1.0);
   }
 
@@ -20,7 +20,7 @@ fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
   let arrow_a = mid_fract((x + y) / grid);
   let arrow_b = mid_fract((x - y) / grid);
 
-  if (abs(arrow_a) < width || abs(arrow_b) < width) {
+  if abs(arrow_a) < width || abs(arrow_b) < width {
     return vec4(1, 1, 1, 1);
   }
 
@@ -28,10 +28,10 @@ fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
 
   let fill_a = mid_fract((x + y) / grid + 0.5);
   let fill_b = mid_fract((x - y) / grid + 0.5);
-  if (abs(fill_a) < cell && abs(fill_b) < cell) {
+  if abs(fill_a) < cell && abs(fill_b) < cell {
     let ag = atan2(fill_b, fill_a);
     let al = length(vec2(fill_a, fill_b));
-    if (al < 0.5 * (0.6 + 0.4 * cos(ag * 8))) {
+    if al < 0.5 * (0.6 + 0.4 * cos(ag * 8)) {
       return vec4(vs_out.color, 1.0);
     }
     return vec4(0.7, 0.7, 1, 1) * 0.9 + vec4(vs_out.color, 1.0) * 0.1;
@@ -43,7 +43,7 @@ fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
 
 fn mid_fract(x: f32) -> f32 {
   let f = fract(x);
-  if (f < 0.5) {
+  if f < 0.5 {
     return f;
   } else {
     return f - 1;
@@ -66,9 +66,9 @@ struct VertexOut {
  */
 @vertex
 fn vertex_main(
-    @location(0) in_pos: vec3<f32>,
-    @location(1) in_color: vec3<f32>
-  ) -> VertexOut {
+  @location(0) in_pos: vec3<f32>,
+  @location(1) in_color: vec3<f32>
+) -> VertexOut {
   var ret: VertexOut;
   ret.position = vec4<f32>(in_pos, 1.0);
   ret.color = in_color;

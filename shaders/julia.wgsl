@@ -19,12 +19,11 @@ fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
   for (var i = 0u; i < 100; i++) {
     p = product(p, p);
     p = add(p, shift);
-
   }
 
   // draw a circle
   let l = length(p);
-  if (l < 100) {
+  if l < 100 {
     return vec4(1.0, 1.0, 0.0, 1.0);
   }
 
@@ -55,9 +54,9 @@ struct VertexOut {
  */
 @vertex
 fn vertex_main(
-    @location(0) in_pos: vec3<f32>,
-    @location(1) in_color: vec3<f32>
-  ) -> VertexOut {
+  @location(0) in_pos: vec3<f32>,
+  @location(1) in_color: vec3<f32>
+) -> VertexOut {
   var ret: VertexOut;
   ret.position = vec4<f32>(in_pos, 1.0);
   ret.color = in_color;
