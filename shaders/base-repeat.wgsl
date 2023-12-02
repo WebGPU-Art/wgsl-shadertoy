@@ -1,5 +1,5 @@
-// const inner_width: f32 = {%inner_width%};
-// const inner_height: f32 = {%inner_height%};
+const inner_width: f32 = {%inner_width%};
+const inner_height: f32 = {%inner_height%};
 
 @fragment
 fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
@@ -16,7 +16,7 @@ fn fragment_main(vs_out: VertexOut) -> @location(0) vec4<f32> {
   let angle = atan2(y_s, x_s);
 
   let l = length(vec2<f32>(x_s, y_s));
-  if l < 10 * (1 + sin(4 * angle + x * 0.2)) * (1 + cos(9 * angle + y * 0.1)) {
+  if l < 10. * (1. + sin(4. * angle + x * 0.2)) * (1. + cos(9. * angle + y * 0.1)) {
     return vec4(1.0, 1.0, 0.0, 1.0);
   }
 
@@ -41,11 +41,11 @@ struct VertexOut {
   @location(0) color: vec3<f32>,
 };
 
-/**
- * (-1, 1,0) (1, 1,0)
- *
- * (-1,-1,0) (1,-1,0)
- */
+///
+/// (-1, 1,0) (1, 1,0)
+///
+/// (-1,-1,0) (1,-1,0)
+///
 @vertex
 fn vertex_main(
   @location(0) in_pos: vec3<f32>,
